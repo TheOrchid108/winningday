@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,24 +15,6 @@
                 padding: 0.5rem;
                 min-width: 80px;
             }
-            .coefficient-inputs {
-                flex-direction: column; /* Stack vertically on small screens */
-                gap: 0.5rem;
-            }
-            .coefficient-inputs input {
-                width: 100%; /* Full width on small screens */
-            }
-        }
-        .coefficient-inputs {
-            display: flex;
-            flex-wrap: wrap; /* Allow wrapping on larger screens */
-            gap: 0.75rem; /* Space between inputs */
-            justify-content: space-between;
-        }
-        .coefficient-inputs input {
-            flex: 1 1 22%; /* Roughly 4 per row on larger screens */
-            min-width: 80px; /* Minimum width for readability */
-            max-width: 100px; /* Limit width on larger screens */
         }
     </style>
 </head>
@@ -42,21 +25,6 @@
         <div class="mb-4">
             <input type="number" id="balance" placeholder="ჩაწერეთ თანხა"
                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base">
-        </div>
-
-        <div class="mb-4 coefficient-inputs">
-            <!-- Coefficient inputs with labels -->
-            <input type="number" id="coeff1" step="0.1" placeholder="დღე 1" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff2" step="0.1" placeholder="დღე 2" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff3" step="0.1" placeholder="დღე 3" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff4" step="0.1" placeholder="დღე 4" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff5" step="0.1" placeholder="დღე 5" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff6" step="0.1" placeholder="დღე 6" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff7" step="0.1" placeholder="დღე 7" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff8" step="0.1" placeholder="დღე 8" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff9" step="0.1" placeholder="დღე 9" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff10" step="0.1" placeholder="დღე 10" class="p-2 border border-gray-300 rounded-lg text-sm">
-            <input type="number" id="coeff11" step="0.1" placeholder="დღე 11" class="p-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <button onclick="generateTable()"
@@ -88,53 +56,63 @@
                 return;
             }
 
-            // Get coefficients from input fields (default to 2.0 if not provided)
-            let coefficients = [];
-            for (let i = 1; i <= 11; i++) {
-                let coeff = parseFloat(document.getElementById(`coeff${i}`).value);
-                coefficients.push(coeff > 0 ? coeff : 2.0); // Default to 2.0 if invalid or empty
-            }
-
-            let remaining = initialBalance * coefficients[0]; // Day 1 winnings using first coefficient
-            let previousWinnings = 0;
+            let remaining = initialBalance * 2; // Day 1 winnings
+            let previousWinnings = 0; // To store winnings for Day 9 and Day 10
 
             for (let i = 1; i <= 11; i++) {
-                let balanceValue = "";
-                let currentWinnings = remaining;
-                let multiplier = coefficients[i - 1]; // Use the coefficient entered for this day
+                let balanceValue = ""; // Balance is empty by default
+                let multiplier = 2.0; // Default multiplier for Days 1-4
+                let currentWinnings = remaining; // Current day's winnings
 
-                // Define balance withdrawal percentages
+                // Day 1: Balance is 50% of winnings
                 if (i === 1) {
                     balanceValue = currentWinnings * 0.5; // 50% of Day 1 winnings
-                    remaining = currentWinnings - balanceValue;
-                } else if (i === 5) {
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
+                }
+                // Day 5: Balance is 15% of winnings
+                else if (i === 5) {
                     balanceValue = currentWinnings * 0.15; // 15% of Day 5 winnings
-                    remaining = currentWinnings - balanceValue;
-                } else if (i === 9) {
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
+                    multiplier = 1.5; // Set multiplier for Day 6
+                }
+                // Day 9: Balance is 10% of winnings, coefficient should be 1.3
+                else if (i === 9) {
                     balanceValue = currentWinnings * 0.10; // 10% of Day 9 winnings
-                    remaining = currentWinnings - balanceValue;
-                    previousWinnings = remaining; // Save for Day 10
-                } else if (i === 10) {
-                    remaining = previousWinnings * coefficients[9]; // Use Day 9 remaining * Day 10 coefficient
-                    currentWinnings = remaining;
-                    previousWinnings = remaining; // Save for Day 11
-                } else if (i === 11) {
-                    currentWinnings = previousWinnings * coefficients[10]; // Use Day 10 winnings * Day 11 coefficient
-                    remaining = currentWinnings;
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
+                    multiplier = 1.3; // Explicitly set multiplier for Day 10
+                    previousWinnings = remaining; // Save updated remaining for Day 10
+                }
+                // Define multipliers for other days
+                else if (i >= 5 && i <= 7) {
+                    multiplier = 1.5;
+                }
+                else if (i === 8) {
+                    multiplier = 1.3;
+                }
+                else if (i === 10) {
+                    multiplier = 1.3;
+                    remaining = previousWinnings * 1.3; // Day 10 uses Day 9 remaining * 1.3
+                    currentWinnings = remaining; // Update currentWinnings for Day 10
+                    previousWinnings = remaining; // Save Day 10 winnings for Day 11
+                }
+                else if (i === 11) {
+                    multiplier = 1.3;
+                    currentWinnings = previousWinnings * 1.30; // Day 11 uses Day 10 winnings * 1.30
+                    remaining = currentWinnings; // Update remaining for consistency
                 }
 
                 // Add row to table
                 let row = `<tr class="border hover:bg-gray-100">
                     <td class="p-2 border">დღე ${i}</td>
                     <td class="p-2 border text-green-600 font-bold">₾ ${currentWinnings.toFixed(2)}</td>
-                    <td class="p-2 border text-purple-600 font-bold">${multiplier.toFixed(2)}</td>
+                    <td class="p-2 border text-purple-600 font-bold">${i === 11 ? "1.30" : multiplier.toFixed(2)}</td>
                     <td class="p-2 border text-blue-600 font-bold">${balanceValue ? `₾ ${balanceValue.toFixed(2)}` : ""}</td>
                 </tr>`;
                 results.innerHTML += row;
 
                 // Apply multiplier for the next day (except for Day 10 and 11 which are handled separately)
                 if (i !== 10 && i !== 11) {
-                    remaining *= coefficients[i]; // Use next day's coefficient
+                    remaining *= multiplier;
                 }
             }
         }
