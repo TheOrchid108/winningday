@@ -11,20 +11,20 @@
         <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">Winning Days Betting Table</h2>
 
         <div class="mb-4">
-            <input type="number" id="balance" placeholder="Enter balance"
+            <input type="number" id="balance" placeholder="ჩაწერეთ თანხა"
                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
 
         <button onclick="generateTable()"
-            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">Calculate</button>
+            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">გამოთვლა</button> <!-- Calculate → გამოთვლა -->
 
         <div class="mt-4 overflow-hidden rounded-lg">
             <table class="w-full border border-gray-300 text-center bg-white rounded-lg shadow-md">
                 <thead>
                     <tr class="bg-blue-500 text-white">
-                        <th class="p-2 border">Day</th>
-                        <th class="p-2 border">Winnings</th>
-                        <th class="p-2 border">Balance</th>
+                        <th class="p-2 border">დღე</th>
+                        <th class="p-2 border">მოგებული</th>
+                        <th class="p-2 border">ბალანსი</th>
                     </tr>
                 </thead>
                 <tbody id="results" class="text-gray-700"></tbody>
@@ -46,7 +46,7 @@
             let remaining = initialBalance * 2; // Day 1 winnings
             let previousWinnings = 0; // To store winnings for Day 9 and Day 10
 
-            for (let i = 1; i <= 11; i++) { // Extended loop to Day 11
+            for (let i = 1; i <= 11; i++) {
                 let balanceValue = "";
 
                 // Define balance withdrawal percentages
@@ -66,11 +66,11 @@
                 // Store current winnings before applying the next multiplier
                 let currentWinnings = remaining;
 
-                // Add row to table with Lari symbol (₾) followed by a non-breaking space
+                // Add row to table with Georgian labels
                 let row = `<tr class="border hover:bg-gray-100">
-                    <td class="p-2 border">Day ${i}</td>
-                    <td class="p-2 border text-green-600 font-bold">₾&nbsp;${currentWinnings.toFixed(2)}</td>
-                    <td class="p-2 border text-blue-600 font-bold">${balanceValue ? `₾&nbsp;${balanceValue.toFixed(2)}` : ""}</td>
+                    <td class="p-2 border">დღე ${i}</td>
+                    <td class="p-2 border text-green-600 font-bold">₾ ${currentWinnings.toFixed(2)}</td>
+                    <td class="p-2 border text-blue-600 font-bold">${balanceValue ? `₾ ${balanceValue.toFixed(2)}` : ""}</td>
                 </tr>`;
                 results.innerHTML += row;
 
