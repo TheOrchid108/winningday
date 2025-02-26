@@ -6,14 +6,13 @@
     <title>Winning Days Betting Table</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for responsiveness */
         @media (max-width: 430px) {
             table {
-                font-size: 0.875rem; /* Smaller font size on mobile */
+                font-size: 0.875rem;
             }
             th, td {
-                padding: 0.5rem; /* Reduced padding on small screens */
-                min-width: 80px; /* Minimum width for readability */
+                padding: 0.5rem;
+                min-width: 80px;
             }
         }
     </style>
@@ -92,15 +91,15 @@
                     previousWinnings = remaining; // Save Day 10 winnings for Day 11
                 }
                 else if (i === 11) {
-                    multiplier = 1.2;
-                    remaining = previousWinnings * 1.20; // Day 11 uses Day 10 winnings * 1.20
+                    multiplier = 1.3;
+                    remaining = previousWinnings * 1.30; // Day 11 uses Day 10 winnings * 1.30
                 }
 
                 // Add row to table with coefficient
                 let row = `<tr class="border hover:bg-gray-100">
                     <td class="p-2 border">დღე ${i}</td>
                     <td class="p-2 border text-green-600 font-bold">₾ ${currentWinnings.toFixed(2)}</td>
-                    <td class="p-2 border text-purple-600 font-bold">${i === 11 ? "1.20" : multiplier.toFixed(2)}</td>
+                    <td class="p-2 border text-purple-600 font-bold">${i === 11 ? "1.30" : multiplier.toFixed(2)}</td>
                     <td class="p-2 border text-blue-600 font-bold">${balanceValue ? `₾ ${balanceValue.toFixed(2)}` : ""}</td>
                 </tr>`;
                 results.innerHTML += row;
