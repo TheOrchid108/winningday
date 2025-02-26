@@ -59,43 +59,48 @@
             let previousWinnings = 0; // To store winnings for Day 9 and Day 10
 
             for (let i = 1; i <= 11; i++) {
-                let balanceValue = "";
-                let multiplier = 2.0; // Default multiplier
+                let balanceValue = ""; // Balance is empty by default
+                let multiplier = 2.0; // Default multiplier for Days 1-4
+                let currentWinnings = remaining; // Current day's winnings
 
-                // Define balance withdrawal percentages
-                let balancePercentage = 0;
-                if (i === 1) balancePercentage = 0.5;
-                else if (i === 3) balancePercentage = 0.5;
-                else if (i === 7) balancePercentage = 0.3;
-                else if (i === 9) balancePercentage = 0.2;
-                else if (i === 10) balancePercentage = 0.1;
-
-                if (balancePercentage > 0) {
-                    balanceValue = remaining * balancePercentage;
-                    remaining -= balanceValue; // Subtract withdrawn balance
+                // Day 1: Balance is 50% of winnings
+                if (i === 1) {
+                    balanceValue = currentWinnings * 0.5; // 50% of Day 1 winnings
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
                 }
-
-                // Store current winnings before applying the next multiplier
-                let currentWinnings = remaining;
-
-                // Define multipliers for the next day's winnings based on day
-                if (i >= 5 && i <= 7) multiplier = 1.5;
-                else if (i === 8) multiplier = 1.3;
+                // Day 5: Balance is 15% of winnings
+                else if (i === 5) {
+                    balanceValue = currentWinnings * 0.15; // 15% of Day 5 winnings
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
+                    multiplier = 1.5; // Set multiplier for Day 6
+                }
+                // Day 9: Balance is 10% of winnings, coefficient should be 1.3
                 else if (i === 9) {
+                    balanceValue = currentWinnings * 0.10; // 10% of Day 9 winnings
+                    remaining = currentWinnings - balanceValue; // Remaining after balance withdrawal
+                    multiplier = 1.3; // Explicitly set multiplier for Day 10
+                    previousWinnings = remaining; // Save updated remaining for Day 10
+                }
+                // Define multipliers for other days
+                else if (i >= 5 && i <= 7) {
+                    multiplier = 1.5;
+                }
+                else if (i === 8) {
                     multiplier = 1.3;
-                    previousWinnings = currentWinnings; // Save Day 9 winnings for Day 10
                 }
                 else if (i === 10) {
                     multiplier = 1.3;
-                    remaining = previousWinnings * 1.3; // Day 10 uses Day 9 winnings * 1.3
+                    remaining = previousWinnings * 1.3; // Day 10 uses Day 9 remaining * 1.3
+                    currentWinnings = remaining; // Update currentWinnings for Day 10
                     previousWinnings = remaining; // Save Day 10 winnings for Day 11
                 }
                 else if (i === 11) {
                     multiplier = 1.3;
-                    remaining = previousWinnings * 1.30; // Day 11 uses Day 10 winnings * 1.30
+                    currentWinnings = previousWinnings * 1.30; // Day 11 uses Day 10 winnings * 1.30
+                    remaining = currentWinnings; // Update remaining for consistency
                 }
 
-                // Add row to table with coefficient
+                // Add row to table
                 let row = `<tr class="border hover:bg-gray-100">
                     <td class="p-2 border">დღე ${i}</td>
                     <td class="p-2 border text-green-600 font-bold">₾ ${currentWinnings.toFixed(2)}</td>
