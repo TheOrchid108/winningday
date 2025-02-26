@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Winning Days Betting Table</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for responsiveness */
+        @media (max-width: 430px) {
+            table {
+                font-size: 0.875rem; /* Smaller font size on mobile */
+            }
+            th, td {
+                padding: 0.5rem; /* Reduced padding on small screens */
+                min-width: 80px; /* Minimum width for readability */
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-6">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
-        <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">Winning Days Betting Table</h2>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-lg">
+        <h2 class="text-xl sm:text-2xl font-bold text-center mb-4 text-gray-800">Winning Days Betting Table</h2>
 
         <div class="mb-4">
             <input type="number" id="balance" placeholder="ჩაწერეთ თანხა"
-                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base">
         </div>
 
         <button onclick="generateTable()"
-            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">გამოთვლა</button>
+            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition text-sm sm:text-base">გამოთვლა</button>
 
-        <div class="mt-4 overflow-hidden rounded-lg">
-            <table class="w-full border border-gray-300 text-center bg-white rounded-lg shadow-md">
+        <div class="mt-4 overflow-x-auto">
+            <table class="w-full border border-gray-300 text-center bg-white rounded-lg shadow-md text-sm sm:text-base">
                 <thead>
                     <tr class="bg-blue-500 text-white">
                         <th class="p-2 border">დღე</th>
