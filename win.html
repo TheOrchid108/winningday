@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winning Days Betting Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">Winning Days Betting Table</h2>
+
+        <div class="mb-4">
+            <input type="number" id="balance" placeholder="Enter balance"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+
+        <button onclick="generateTable()"
+            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">Calculate</button>
+
+        <div class="mt-4 overflow-hidden rounded-lg">
+            <table class="w-full border border-gray-300 text-center bg-white rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-blue-500 text-white">
+                        <th class="p-2 border">Day</th>
+                        <th class="p-2 border">Winnings</th>
+                        <th class="p-2 border">Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="results" class="text-gray-700"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function generateTable() {
+            let initialBalance = parseFloat(document.getElementById("balance").value);
+            let results = document.getElementById("results");
+            results.innerHTML = "";
+
+            if (initialBalance <= 0 || isNaN(initialBalance)) {
+                alert("Please enter a valid positive balance!");
+                return;
+            }
+
+            let remaining = initialBalance * 2; // Day 1 winnings
+            let previousWinnings = 0; // To store winnings for Day 9 and Day 10
+
+            for (let i = 1; i <= 11; i++) { // Extended loop to Day 11
+                let balanceValue = "";
+
+                // Define balance withdrawal percentages
+                let balancePercentage = 0;
+                if (i === 1) balancePercentage = 0.5;
+                else if (i === 3) balancePercentage = 0.5;
+                else if (i === 7) balancePercentage = 0.3;
+                else if (i === 9) balancePercentage = 0.2;
+                else if (i === 10) balancePercentage = 0.1;
+                // Day 11 has no balance withdrawal
+
+                if (balancePercentage > 0) {
+                    balanceValue = remaining * balancePercentage;
+                    remaining -= balanceValue; // Subtract withdrawn balance
+                }
+
+                // Store current winnings before applying the next multiplier
+                let currentWinnings = remaining;
+
+                // Add row to table with Lari symbol (₾) followed by a non-breaking space
+                let row = `<tr class="border hover:bg-gray-100">
+                    <td class="p-2 border">Day ${i}</td>
+                    <td class="p-2 border text-green-600 font-bold">₾&nbsp;${currentWinnings.toFixed(2)}</td>
+                    <td class="p-2 border text-blue-600 font-bold">${balanceValue ? `₾&nbsp;${balanceValue.toFixed(2)}` : ""}</td>
+                </tr>`;
+                results.innerHTML += row;
+
+                // Define multipliers for the next day's winnings
+                let multiplier = 2.0; // Default multiplier
+                if (i >= 5 && i <= 7) multiplier = 1.5;
+                else if (i === 8) multiplier = 1.3;
+                else if (i === 9) {
+                    multiplier = 1.3;
+                    previousWinnings = currentWinnings; // Save Day 9 winnings for Day 10
+                }
+                else if (i === 10) {
+                    remaining = previousWinnings * 1.3; // Day 10 uses Day 9 winnings * 1.3
+                    previousWinnings = remaining; // Save Day 10 winnings for Day 11
+                    continue; // Skip multiplier application for Day 10
+                }
+                else if (i === 11) {
+                    remaining = previousWinnings * 1.20; // Day 11 uses Day 10 winnings * 1.20
+                    continue; // Skip multiplier application for Day 11
+                }
+
+                // Apply multiplier for the next day
+                remaining *= multiplier;
+            }
+        }
+    </script>
+</body>
+</html>
